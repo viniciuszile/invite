@@ -1,0 +1,163 @@
+:root{
+  --bg: #fff6f9;
+  --ink: #2a2a2a;
+  --env: #ff7a91;
+  --env-dark: #ff5a78;
+  --accent: #b1004b;
+  --paper: #fffdf8;
+  --shadow: 0 15px 40px rgba(0,0,0,.18);
+  --radius: 18px;
+  --speed: .9s;
+  --easing: cubic-bezier(.2,.8,.2,1);
+}
+
+*{ box-sizing: border-box; margin: 0; padding: 0; }
+html,body{ height:100%; }
+body{
+  background: var(--bg);
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  gap:14px;
+  padding: 16px;
+}
+
+.envelope{
+  position: relative;
+  width: 95vw; /* Quase toda a largura */
+  max-width: 400px;
+  height: 75vh; /* Grande para mobile */
+  max-height: 550px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  perspective: 1400px;
+}
+
+/* Corpo do envelope */
+.envelope__back{
+  position:absolute;
+  inset:0;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--env) 0%, var(--env-dark) 100%);
+  box-shadow: var(--shadow);
+}
+
+/* Aba */
+.envelope__flap{
+  position:absolute;
+  left:0; right:0; top:0;
+  height:58%;
+  background: linear-gradient(180deg, var(--env-dark), var(--env));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform var(--speed) var(--easing);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+/* Selo */
+.envelope__seal{
+  position:absolute;
+  top:44%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  display:grid;
+  place-items:center;
+  width:50px;
+  height:50px;
+  border-radius:999px;
+  background:#fff3f6;
+  box-shadow: 0 8px 18px rgba(177,0,75,.25), inset 0 2px 0 #fff;
+  font-size:22px;
+  transition: transform .4s var(--easing), opacity .4s var(--easing);
+}
+
+/* Carta */
+.letter{
+  position:absolute;
+  left:50%;
+  bottom:10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  transform: translate(-50%, 35%);
+  opacity: 0;
+  background: var(--paper);
+  background-image: repeating-linear-gradient(
+    transparent 0px,
+    transparent 23px,
+    rgba(0,0,0,0.03) 24px
+  );
+  color: var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  padding: 24px 18px;
+  text-align: center;
+  line-height: 1.45;
+  transition:
+    transform var(--speed) var(--easing),
+    opacity .5s ease;
+
+  /* Permitir rolagem dentro da carta */
+  overflow-y: auto;
+}
+
+/* Rolagem suave e barra discreta no mobile */
+.letter::-webkit-scrollbar {
+  width: 6px;
+}
+.letter::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+
+.letter h2{
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.letter p{
+  font-size: 1.05rem;
+}
+
+.letter .assinatura{
+  margin-top: 16px;
+  font-style: italic;
+  opacity: .8;
+}
+
+/* Estado aberto */
+.envelope.open .envelope__flap{
+  transform: rotateX(-178deg);
+}
+.envelope.open .envelope__seal{
+  transform: translate(-50%, -50%) scale(.01);
+  opacity: 0;
+}
+.envelope.open .letter{
+  transform: translate(-50%, 0%);
+  opacity: 1;
+}
+
+/* Dica */
+.hint{
+  font-size:.9rem;
+  opacity:.7;
+}
+
+/* Desktop ajustes */
+@media (min-width: 768px){
+  .envelope{
+    height: 400px;
+    max-height: none;
+  }
+}
